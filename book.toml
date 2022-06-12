@@ -1,5 +1,13 @@
 [book]
-authors = []
-language = "en"
+title = "Tutorial Rust"
+authors = ["Cristian David Sainea Cespedes", "Brayan David Leon Sanabria", "Carlos Augusto Gutierrez Silva", "Diego Felipe Sanchez Medina"]
+description = "Tutorial de Rust realizado para la clase de Lenguajes de Programación 2022-1"
+language = "es"
 multilingual = false
 src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/cdsaineac/TutorialRust"
+
+[output.html.playground]
+editable = true
