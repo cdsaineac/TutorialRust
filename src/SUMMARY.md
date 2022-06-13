@@ -23,8 +23,8 @@
     - [Funciones asociadas](tutorial/estructuras/funciones_asociadas.md)
     - [Enumeraciones](tutorial/estructuras/enumeraciones.md)
     - [Traits (Rasgos)](tutorial/estructuras/traits.md)
-- [Concurrencia](tutorial/concurrencia.md) 
-
+- [Concurrencia](tutorial/concurrencia.md)
+    - [Paso de mensajes](tutorial/concurrencia/paso_mensajes.md) 
 ---------------------------------------------------------
 # Bibliografía
 - [Referencias](bibliografia/referencias.md)
