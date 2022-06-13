@@ -18,7 +18,7 @@ thread::spawn(|| { /* Código que se ejecutará en el hilo */ });
 ```
 
 #### Creando un hilo - *Ejemplo 1*
-```rust,noplayground
+```rust,editable
 use std::thread;
 
 fn main() {
@@ -28,7 +28,7 @@ fn main() {
 }
 ```
 #### Creando un hilo - *Ejemplo 2*
-```rust,noplayground
+```rust,editable
 use std::thread;
 use std::time::Duration;
 
@@ -53,7 +53,7 @@ Las llamadas a thread::sleep obligan a un hilo a detener su ejecución durante u
 #### Join handles
 
 Para esperar a que todos los hilos terminen su ejecución, podemos usar el método `join`.
-```rust,noplayground
+```rust,editable
 use std::thread;
 
 fn main() {
@@ -64,20 +64,20 @@ fn main() {
 }
 ```
 #### Join handle - *Ejemplo 2*
-```rust,noplayground
+```rust,editable
 use std::thread;
 use std::time::Duration;
 
 fn main() {
     let handle = thread::spawn(|| {
         for i in 1..10 {
-            println!("hi number {} from the spawned thread!", i);
+            println!("Hola {} desde el nuevo hilo!", i);
             thread::sleep(Duration::from_millis(1));
         }
     });
 
     for i in 1..5 {
-        println!("hi number {} from the main thread!", i);
+        println!("Hola {} desde el hilo principal!", i);
         thread::sleep(Duration::from_millis(1));
     }
 
@@ -87,14 +87,14 @@ fn main() {
 
 #### `move` closure
 Permite usar datos en un hilo en otro hilo.
-```rust,noplayground
+```rust,editable
 use std::thread;
 
 fn main() {
     let v = vec![1, 2, 3];
 
     let handle = thread::spawn(|| {
-        println!("Here's a vector: {:?}", v);
+        println!("Vector: {:?}", v);
     });
 
     handle.join().unwrap();
@@ -102,14 +102,14 @@ fn main() {
 ```
 
 Si queremos forzar el closure para que se apropie de los valores que usa en el entorno, podemos usar `move` antes de la lista de parámetros.
-```rust,noplayground
+```rust,editable
 use std::thread;
 
 fn main() {
     let v = vec![1, 2, 3];
 
     let handle = thread::spawn(move || {
-        println!("Here's a vector: {:?}", v);
+        println!("Vector: {:?}", v);
     });
 
     handle.join().unwrap();
