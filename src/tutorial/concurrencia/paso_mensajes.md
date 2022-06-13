@@ -17,19 +17,20 @@ En este caso ***tx*** va a ser el transmisor del canal y ***rx*** va a ser el re
 ```rust,editable
 use std::sync::mpsc;
 use std::thread;
+fn main (){
+    let (tx, rx) = mpsc::channel();
+    let valor = "$100.000";
 
-let (tx, rx) = mpsc::channel();
-let valor = "$100.000";
+    thread::spawn(move || {
+        let precio = String::from(valor);
+        println!("Precio: {}", precio);
+        tx.send(precio).unwrap();
+        //println!("Precio: {}", precio);
+    });
 
-thread::spawn(move || {
-    let precio = String::from(valor);
-    println!("Precio: {}", precio);
-    tx.send(precio).unwrap();
-    //println!("Precio: {}", precio);
-});
-
-let received = rx.recv().unwrap();
-println!("El precio del producto es: {}", received);
+    let received = rx.recv().unwrap();
+    println!("El precio del producto es: {}", received);
+}
 ```
 
 ## Ejemplo Basico - Parte2
@@ -37,22 +38,25 @@ println!("El precio del producto es: {}", received);
 use std::sync::mpsc;
 use std::thread;
 
-let (tx, rx) = mpsc::channel();
+fn main (){
+    let (tx, rx) = mpsc::channel();
 
-let precio = 100000;
+    let precio = 100000;
 
-println!("El precio del producto es: ${}.", precio);
+    println!("El precio del producto es: ${}.", precio);
 
-thread::spawn(move || {
-    let bono = 10000;
-    let valor = precio - bono;
-    tx.send(valor).unwrap();
-    println!("Bono de ${} aplicado.", bono);
-});
+    thread::spawn(move || {
+        let bono = 10000;
+        let valor = precio - bono;
+        tx.send(valor).unwrap();
+        println!("Bono de ${} aplicado.", bono);
+    });
 
-let total = rx.recv().unwrap();
+    let total = rx.recv().unwrap();
 
-println!("El precio total es: ${}.", total);
+    println!("El precio total es: ${}.", total);
+}
+
 ```
 ## Ejemplo Enviando 2 Variables
 ```rust,editable
@@ -60,23 +64,26 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
-let (tx, rx) = mpsc::channel();
+fn main(){
+    let (tx, rx) = mpsc::channel();
 
-let precio = 100000;
+    let precio = 100000;
 
-println!("El precio del producto es: ${}.", precio);
+    println!("El precio del producto es: ${}.", precio);
 
-thread::spawn(move || {
-    let bono = 10000;
-    let valor = precio - bono;
-    tx.send(bono).unwrap();
-    //thread::sleep(Duration::from_secs(1));
-    tx.send(valor).unwrap();
-});
+    thread::spawn(move || {
+        let bono = 10000;
+        let valor = precio - bono;
+        tx.send(bono).unwrap();
+        //thread::sleep(Duration::from_secs(1));
+        tx.send(valor).unwrap();
+    });
 
-for receptor in rx {
-    println!("${}", receptor);
+    for receptor in rx {
+        println!("${}", receptor);
+    }
 }
+
 ```
 
 ## Ejemplo Enviando 2 Variables de Diferentes Hilos
@@ -84,30 +91,31 @@ for receptor in rx {
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
+fn main(){
+    let (tx, rx) = mpsc::channel();
 
-let (tx, rx) = mpsc::channel();
+    let precio = 100000;
 
-let precio = 100000;
+    println!("El precio del producto es: ${}.", precio);
 
-println!("El precio del producto es: ${}.", precio);
+    let tx1 = tx.clone();
+    thread::spawn(move || {
+        let iva = 19000;
+        tx1.send(iva).unwrap();
+        //thread::sleep(Duration::from_secs(1));
+    });
 
-let tx1 = tx.clone();
-thread::spawn(move || {
-    let iva = 19000;
-    tx1.send(iva).unwrap();
-    //thread::sleep(Duration::from_secs(1));
-});
+    thread::spawn(move || {
+        let bono = 10000;
+        let valor = precio + 19000 - bono;
+        tx.send(bono).unwrap();
+        //thread::sleep(Duration::from_secs(1));
+        tx.send(valor).unwrap();
+    });
 
-thread::spawn(move || {
-    let bono = 10000;
-    let valor = precio + 19000 - bono;
-    tx.send(bono).unwrap();
-    //thread::sleep(Duration::from_secs(1));
-    tx.send(valor).unwrap();
-});
-
-for receptor in rx {
-    println!("${}", receptor);
+    for receptor in rx {
+        println!("${}", receptor);
+    }    
 }
 ```
 
@@ -116,31 +124,32 @@ for receptor in rx {
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
+fn main(){
+    let (tx, rx) = mpsc::channel();
+    let (tx2, rx2) = mpsc::channel();
 
-let (tx, rx) = mpsc::channel();
-let (tx2, rx2) = mpsc::channel();
+    let precio = 100000;
 
-let precio = 100000;
+    println!("El precio del producto es: ${}.", precio);
 
-println!("El precio del producto es: ${}.", precio);
+    thread::spawn(move || {
+        let iva = 19000;
+        tx2.send(iva).unwrap();
+        //thread::sleep(Duration::from_secs(1));
+    });
 
-thread::spawn(move || {
-    let iva = 19000;
-    tx2.send(iva).unwrap();
-    //thread::sleep(Duration::from_secs(1));
-});
+    thread::spawn(move || {
+        let bono = 10000;
+        let impuesto = rx2.recv().unwrap();
+        let valor = precio + impuesto - bono;
+        tx.send(impuesto).unwrap();
+        tx.send(bono).unwrap();
+        //thread::sleep(Duration::from_secs(1));
+        tx.send(valor).unwrap();
+    });
 
-thread::spawn(move || {
-    let bono = 10000;
-    let impuesto = rx2.recv().unwrap();
-    let valor = precio + impuesto - bono;
-    tx.send(impuesto).unwrap();
-    tx.send(bono).unwrap();
-    //thread::sleep(Duration::from_secs(1));
-    tx.send(valor).unwrap();
-});
-
-for receptor in rx {
-    println!("${}", receptor);
+    for receptor in rx {
+        println!("${}", receptor);
+    }    
 }
 ```
