@@ -14,7 +14,7 @@ En este caso ***tx*** va a ser el transmisor del canal y ***rx*** va a ser el re
 
 ## Ejemplo Basico
 
-```rust
+```rust,editable
 use std::sync::mpsc;
 use std::thread;
 
@@ -33,7 +33,7 @@ println!("El precio del producto es: {}", received);
 ```
 
 ## Ejemplo Basico - Parte2
-```rust
+```rust,editable
 use std::sync::mpsc;
 use std::thread;
 
@@ -55,7 +55,7 @@ let total = rx.recv().unwrap();
 println!("El precio total es: ${}.", total);
 ```
 ## Ejemplo Enviando 2 Variables
-```rust
+```rust,editable
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
@@ -80,7 +80,7 @@ for receptor in rx {
 ```
 
 ## Ejemplo Enviando 2 Variables de Diferentes Hilos
-```rust
+```rust,editable
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
@@ -112,7 +112,7 @@ for receptor in rx {
 ```
 
 ## Ejemplo Enviando Variables Entre Nuevos Hilos
-```rust
+```rust,editable
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
